@@ -1,0 +1,31 @@
+
+
+import csv
+
+# Nombre del archivo de entrada y salida
+input_file = "Car_details_v3.csv"
+output_file = "hbase_put_commands.txt"
+
+try:
+    # Aqui abrimos el archivo CSV y el archivo de salida
+    with open(input_file, "r") as csvfile, open(output_file, "w") as hbasefile:
+        reader = csv.DictReader(csvfile)
+
+        # Ahora procesamos cada fila y generamos los comandos HBase
+        for row in reader:
+            # Generamos un identificador único basado en el nombre del auto
+            car_id = row["Car Name"].replace(" ", "_").replace("/", "-")
+            
+            # Escribimos los comandos `put` para cada columna
+            hbasefile.write(f"put 'cars', '{car_id}', 'info:brand', '{row['Brand']}'\n")
+            hbasefile.write(f"put 'cars', '{car_id}', 'info:model', '{row['Model']}'\n")
+            hbasefile.write(f"put 'cars', '{car_id}', 'info:location', '{row['Location']}'\n")
+            hbasefile.write(f"put 'cars', '{car_id}', 'specs:price', '{row['Price']}'\n")
+            hbasefile.write(f"put 'cars', '{car_id}', 'specs:year', '{row['Year']}'\n")
+            hbasefile.write(f"put 'cars', '{car_id}', 'specs:fuel_type', '{row['Fuel Type']}'\n")
+            hbasefile.write(f"put 'cars', '{car_id}', 'specs:transmission', '{row['Transmission']}'\n")
+            hbasefile.write(f"put 'cars', '{car_id}', 'specs:owner', '{row['Owner']}'\n")
+
+    print(f"Comandos generados y guardados en {output_file}")
+except Exception as e:
+    print(f"Error: {e}")
