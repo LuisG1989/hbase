@@ -29,3 +29,16 @@ try:
     print(f"Comandos generados y guardados en {output_file}")
 except Exception as e:
     print(f"Error: {e}")
+source 'hbase_put_commands.txt'
+
+# Consultamos la lista
+scan 'cars'
+#Consultamos el auto Toyota Corolla 
+get 'cars', 'Toyota_Corolla_2020'
+#Procedemos a actualizar lso datos de nuestro Corolla
+put 'cars', 'Toyota_Corolla_2020', 'specs:price', '25000000'
+# Realizamos la eliminación del auto del listado
+deleteall 'cars', 'Toyota_Corolla_2020'
+#Al buscarlo por marca ya no nos aparece
+scan 'cars', { FILTER => "SingleColumnValueFilter('info', 'brand', =, 'binary:Toyota')" }
+
